@@ -50,10 +50,11 @@ namespace vue {
           QMainWindow(parent),
           ui(new Ui::EchecsWindow)
     {   
-
+        
         echiquier_ = make_unique<model::ChessBoard>();
         ui->setupUi(this);
-
+        
+        ui->echiquierWidget->setStyleSheet(QString::fromStdString("background-image: url(" "./ressources/chessboard.png"  "); "));
         QList<QPushButton*> listCaseTemp = ui->echiquierWidget->findChildren<QPushButton*>();
 
         // On mets les boutons pour les cases de l'echiquier en ordre, pour un acces plus facile
