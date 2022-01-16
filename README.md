@@ -1,7 +1,7 @@
 # ChessQt
 A chess game prototype writen in c++, using Qt for the UI.
 -----------------------------------------------------------------------
-![screenshot](ressources/screenshot.png)
+![screenshot](Ressources/screenshot.png)
 -----------------------------------------------------------------------
 ## About the project
 -----------------------------------------------------------------------
