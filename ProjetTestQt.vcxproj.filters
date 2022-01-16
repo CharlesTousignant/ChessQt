@@ -83,15 +83,15 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="QtUI\EchecsWindow.pro">
+    <None Include="QtUI\ChessWindow.pro">
       <Filter>QtCreator Files</Filter>
     </None>
-    <None Include="QtUI\EchecsWindow.pro.user">
+    <None Include="QtUI\ChessWindow.user">
       <Filter>QtCreator Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="QtUI\echecswindow.ui">
+    <QtUic Include="QtUI\ChessWindow.ui">
       <Filter>QtCreator Files</Filter>
     </QtUic>
   </ItemGroup>

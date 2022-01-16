@@ -133,11 +133,11 @@
     <Image Include="vide.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="QtUI\EchecsWindow.pro" />
-    <None Include="QtUI\EchecsWindow.pro.user" />
+    <None Include="QtUI\ChessWindow.pro" />
+    <None Include="QtUI\ChessWindow.user" />
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="QtUI\echecswindow.ui" />
+    <QtUic Include="QtUI\ChessWindow.ui" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Headers\ChessBoard.h" />

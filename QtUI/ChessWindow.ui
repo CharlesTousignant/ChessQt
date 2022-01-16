@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>EchecsWindow</class>
- <widget class="QMainWindow" name="EchecsWindow">
+ <class>ChessWindow</class>
+ <widget class="QMainWindow" name="ChessWindow">
   <property name="windowModality">
    <enum>Qt::NonModal</enum>
   </property>
@@ -23,7 +23,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>EchecsWindow</string>
+   <string>ChessQt</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="enabled">
@@ -42,7 +42,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Position depart 1</string>
+          <string>Initial Position 1</string>
          </property>
         </widget>
        </item>
@@ -55,7 +55,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Position depart 2</string>
+          <string>Initial Position 2</string>
          </property>
         </widget>
        </item>
@@ -68,7 +68,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Position depart 3</string>
+          <string>Initial Position 2</string>
          </property>
         </widget>
        </item>

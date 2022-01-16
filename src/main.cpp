@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 	testing::InitGoogleTest();
 	RUN_ALL_TESTS();
 	QApplication app(argc, argv);
-	vue::EchecsWindow w;
+	vue::ChessWindow w;
 	w.show();
 	return app.exec();
 }

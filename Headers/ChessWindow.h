@@ -16,7 +16,7 @@
 #pragma pop()
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class EchecsWindow; }
+namespace Ui { class ChessWindow; }
 QT_END_NAMESPACE
 
 namespace vue {
@@ -24,12 +24,12 @@ namespace vue {
 
 int getButtonCase(QPushButton* a);
 
-class EchecsWindow : public QMainWindow {
+class ChessWindow : public QMainWindow {
     Q_OBJECT
 
 public:
-    EchecsWindow(QWidget* parent = nullptr);
-    ~EchecsWindow();
+    ChessWindow(QWidget* parent = nullptr);
+    ~ChessWindow();
 
 public slots:
 void handleButtonsBoard();
@@ -45,9 +45,8 @@ void deplacementPossible(model::Position caseDepart, model::Position caseArrivee
 
 private:
 
-    Ui::EchecsWindow* ui;
-        
-    std::unique_ptr<model::ChessBoard> echiquier_;
+    Ui::ChessWindow* ui;
+    std::unique_ptr<model::ChessBoard> chessBoard_;
     int lastPressedButton_ = -1;
     std::vector<QPushButton*> listCases_;
 
