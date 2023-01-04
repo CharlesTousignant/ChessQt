@@ -115,12 +115,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="googletest\src\gtest-all.cc" />
+    <ClCompile Include="src\Bishop.cpp" />
     <ClCompile Include="src\ChessBoard.cpp" />
     <ClCompile Include="src\ChessWindow.cpp" />
     <ClCompile Include="src\King.cpp" />
     <ClCompile Include="src\Knight.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Pawn.cpp" />
     <ClCompile Include="src\Pieces.cpp" />
+    <ClCompile Include="src\Queen.cpp" />
     <ClCompile Include="src\Rook.cpp" />
     <ClCompile Include="Tests\TestEchecs.cpp" />
   </ItemGroup>
@@ -148,9 +151,12 @@
     <QtMoc Include="Headers\ChessWindow.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Headers\Bishop.h" />
     <ClInclude Include="Headers\King.h" />
     <ClInclude Include="Headers\Knight.h" />
+    <ClInclude Include="Headers\Pawn.h" />
     <ClInclude Include="Headers\Piece.h" />
+    <ClInclude Include="Headers\Queen.h" />
     <ClInclude Include="Headers\Rook.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

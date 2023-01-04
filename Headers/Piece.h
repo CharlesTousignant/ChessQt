@@ -37,13 +37,13 @@ namespace model {
         virtual ~Piece() = default;
 
         Position getPos() const;
-        void setPos(Position newPos);
+        virtual void setPos(Position newPos);
 
         Color getColor() const;
 
         virtual std::pair<std::vector<Position>, bool> getValidMoves(ChessBoard& chessBoard) const = 0;
 
-        bool isEnemyKing(Piece* piece) const;
+        
     protected:
         Position position_;
         Color color_;

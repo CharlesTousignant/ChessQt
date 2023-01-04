@@ -2,6 +2,7 @@
 #include "../Headers/King.h"
 #include "../Headers/Rook.h"
 #include "../Headers/Knight.h"
+#include "../Headers/Bishop.h"
 
 #include "qgraphicsview.h"
 #include "qbuttongroup.h"
@@ -124,6 +125,7 @@ namespace vue {
 
             chessBoard_->addPiece("rook", Color::black, { 8, 6 });
             chessBoard_->addPiece("king", Color::black, { 8, 8 });
+            chessBoard_->addPiece("bishop", Color::black, { 8, 7 });
             break;
 
         case 2:
@@ -158,9 +160,13 @@ namespace vue {
             if (dynamic_cast<King*>(piece))
                 return pathBlackKing;
             else if (dynamic_cast<Knight*>(piece))
-                return pathBlackKnight; 
-            else
+                return pathBlackKnight;
+            else if (dynamic_cast<Rook*>(piece))
                 return pathBlackRook;
+            else if (dynamic_cast<Bishop*>(piece))
+                return pathBlackBishop;
+            else
+                return pathBlackPawn;
         }
 
         else {
@@ -168,8 +174,12 @@ namespace vue {
                 return pathWhiteKing;
             else if (dynamic_cast<Knight*>(piece))
                 return pathWhiteKnight;
-            else
+            else if (dynamic_cast<Rook*>(piece))
                 return pathWhiteRook;
+            else if (dynamic_cast<Bishop*>(piece))
+                return pathWhiteBishop;
+            else
+                return pathWhitePawn;
         }
     }
 

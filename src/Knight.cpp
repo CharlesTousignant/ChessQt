@@ -23,7 +23,7 @@ namespace model{
                 if (piece) {
                     if (piece->getColor() == color_)
                         continue;
-                    isAttackingKing |= isEnemyKing(piece);
+                    isAttackingKing |= chessBoard.isEnemyKing(piece);
                     validMoves.push_back(posPossible);
                 }
 

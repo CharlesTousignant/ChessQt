@@ -42,12 +42,4 @@ namespace model {
     Color Piece::getColor() const {
         return color_;
     }
-
-    bool Piece::isEnemyKing(Piece* piece) const {
-        bool foundKing = false;
-        if (piece) {
-            foundKing = dynamic_cast<King*>(piece);
-        }
-        return foundKing;
-    }
 }

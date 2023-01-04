@@ -2,6 +2,7 @@
 #include "../Headers/Rook.h"
 #include "../Headers/Knight.h"
 #include "../Headers/ChessBoard.h"
+#include "../Headers/Bishop.h"
 
 namespace model {
     using namespace::std;
@@ -15,15 +16,19 @@ namespace model {
         if (posPiece.isOnBoard()) {
             unsigned indexPos = posTo1D(posPiece);
             if (type == "king") {
-                piecesVect_[indexPos] = (make_shared<King>(posPiece, color));
+                piecesVect_[indexPos] = make_shared<King>(posPiece, color);
             }
 
             else if (type == "rook") {
-                piecesVect_[indexPos] = (make_shared<Rook>(posPiece, color));
+                piecesVect_[indexPos] = make_shared<Rook>(posPiece, color);
             }
 
             else if (type == "knight") {
-                piecesVect_[indexPos] = (make_shared<Knight>(posPiece, color));
+                piecesVect_[indexPos] = make_shared<Knight>(posPiece, color);
+            }
+
+            else if (type == "bishop") {
+                piecesVect_[indexPos] = make_shared<Bishop>(posPiece, color);
             }
 
             ChessBoard::shouldUpdate();
@@ -40,7 +45,7 @@ namespace model {
     bool ChessBoard::kingToPlayIsInCheck() {
         for (auto& piece : piecesVect_) {
             // On verifie si on a trouvee une piece. Ensuite on regarde si elle peut attacker le roi enemi
-            if (piece && piece->getValidMoves(*this).second) {
+            if (piece && piece->getColor() != colorToPlay_ && piece->getValidMoves(*this).second) {
                 return true;
             }
         }
@@ -91,6 +96,11 @@ namespace model {
                 emit(impossibleMove("Click on a piece to move it"));
             }
         }
+    }
+
+    bool ChessBoard::isEnemyKing(Piece* piece) const
+    {
+        return dynamic_cast<King*>(piece);
     }
 
     unsigned ChessBoard::getNbrPiecesEnJeu() {

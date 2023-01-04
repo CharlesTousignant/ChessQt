@@ -46,7 +46,7 @@ namespace model {
 
                     else {
                         // On verifie si la piece enemie est un roi, et on ajoute le mouvement au vecteur
-                        isAttackingKing |= isEnemyKing(piece);
+                        isAttackingKing |= chessBoard.isEnemyKing(piece);
                         validMoves.push_back(posPossible);
                     }
 

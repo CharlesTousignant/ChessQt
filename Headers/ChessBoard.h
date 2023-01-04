@@ -24,6 +24,7 @@ namespace model {
 
         void movePiece(Position posInit, Position posVoulue);
 
+        bool isEnemyKing(Piece* piece) const;
     signals:
         void boardChanged(std::vector<std::shared_ptr<Piece>> boardState);
         void impossibleMove(std::string message);
