@@ -43,7 +43,7 @@ namespace model {
         return color_;
     }
 
-    bool Piece::isEnemyKing(Piece* piece) {
+    bool Piece::isEnemyKing(Piece* piece) const {
         bool foundKing = false;
         if (piece) {
             foundKing = dynamic_cast<King*>(piece);

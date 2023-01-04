@@ -19,7 +19,7 @@ namespace model {
         --countRoi_;
     }
 
-    std::pair<vector<Position>, bool> King::getValidMoves(ChessBoard& chessBoard) {
+    std::pair<vector<Position>, bool> King::getValidMoves(ChessBoard& chessBoard) const {
         vector<Position> validMoves;
         bool isAttackingKing = false;
 

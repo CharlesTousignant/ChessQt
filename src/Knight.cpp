@@ -4,7 +4,7 @@
 namespace model{
     using namespace::std;
 
-    pair<vector<Position>, bool> Knight::getValidMoves(ChessBoard& chessBoard) {
+    pair<vector<Position>, bool> Knight::getValidMoves(ChessBoard& chessBoard) const {
         vector<Position> validMoves;
         bool isAttackingKing = false;
 

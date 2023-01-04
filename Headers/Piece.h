@@ -41,9 +41,9 @@ namespace model {
 
         Color getColor() const;
 
-        virtual std::pair<std::vector<Position>, bool> getValidMoves(ChessBoard& chessBoard) = 0;
+        virtual std::pair<std::vector<Position>, bool> getValidMoves(ChessBoard& chessBoard) const = 0;
 
-        bool isEnemyKing(Piece* piece);
+        bool isEnemyKing(Piece* piece) const;
     protected:
         Position position_;
         Color color_;

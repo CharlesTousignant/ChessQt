@@ -3,7 +3,7 @@
 
 namespace model {
     using namespace::std;
-    pair<vector<Position>, bool> Rook::getValidMoves(ChessBoard& chessBoard) {
+    pair<vector<Position>, bool> Rook::getValidMoves(ChessBoard& chessBoard) const{
         vector<Position> validMoves;
         bool isAttackingKing = false;
         Position posPossible;
