@@ -4,6 +4,7 @@
 #include "../Headers/ChessBoard.h"
 #include "../Headers/Bishop.h"
 #include "../Headers/Pawn.h"
+#include "../Headers/Queen.h"
 
 namespace model {
     using namespace::std;
@@ -11,6 +12,7 @@ namespace model {
     ChessBoard::ChessBoard() {
         piecesVect_.resize(64);
         colorToPlay_ = Color::white;
+        posPawnToPromote_ = {0, 0};
     }
 
     void ChessBoard::addPiece(std::string type, Color color, Position posPiece) {
@@ -36,10 +38,18 @@ namespace model {
                 piecesVect_[indexPos] = make_shared<Pawn>(posPiece, color);
             }
 
+            else if (type == "queen") {
+                piecesVect_[indexPos] = make_shared<Queen>(posPiece, color);
+            }
+
             ChessBoard::shouldUpdate();
         }
         else
             cout << "Placing a piece outside the chessboard is impossible." << endl;
+    }
+
+    void ChessBoard::addPiecePawnPromotion(std::string type) {
+        addPiece(type, (colorToPlay_ == Color::white) ? Color::black : Color::white, posPawnToPromote_);
     }
 
     shared_ptr<Piece>& ChessBoard::getPiece(Position posPiece) {
@@ -204,6 +214,10 @@ namespace model {
                                     auto pawn = dynamic_cast<Pawn*>(pieceADeplacer);
                                     if (pawn && (posInit.x - posVoulue.x) != 0) {
                                         removePieceFromBoard({ posVoulue.x, posVoulue.y + (colorToPlay_ ? -1 : 1)});
+                                    }
+                                    if (pawn && (posVoulue.y == 1 || posVoulue.y == 8)) {
+                                        posPawnToPromote_ = posVoulue;
+                                        emit(promotePawn(colorToPlay_ == Color::white ? Color::black : Color::white));
                                     }
                                 }
                                 if (kingToPlayIsCheckMated()) {

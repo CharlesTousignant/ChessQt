@@ -68,6 +68,7 @@ namespace model {
             movedTwoLastMove = true;
         }
         canMoveTwo = false;
+        movedTwoLastMove = false;
     }
     bool Pawn::hasMovedTwoLastMove() const
     {

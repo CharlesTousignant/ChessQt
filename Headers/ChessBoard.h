@@ -10,7 +10,7 @@ namespace model {
         ~ChessBoard() = default;
 
         void addPiece(std::string type, Color color, Position posPiece);
-
+        void addPiecePawnPromotion(std::string type);
         unsigned getNbrPiecesEnJeu();
         Color getColorToPlay();
 
@@ -32,6 +32,7 @@ namespace model {
     signals:
         void boardChanged(std::vector<std::shared_ptr<Piece>> boardState);
         void impossibleMove(std::string message);
+        void promotePawn(Color color);
 
     private:
         //void findMovesBlockedByTeam(std::vector<Position>& pos, Color color);
@@ -43,5 +44,6 @@ namespace model {
         bool kingToPlayIsCheckMated();
 
         Color colorToPlay_;
+        Position posPawnToPromote_;
     };
 }

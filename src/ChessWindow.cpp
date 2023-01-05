@@ -3,9 +3,11 @@
 #include "../Headers/Rook.h"
 #include "../Headers/Knight.h"
 #include "../Headers/Bishop.h"
+#include "../Headers/Queen.h"
 
 #include "qgraphicsview.h"
 #include "qbuttongroup.h"
+#include "qmessagebox.h"
 
 #include "ui_ChessWindow.h"
 
@@ -17,6 +19,8 @@ namespace vue {
 
 #define pathWhiteKing "./ressources/whiteKing.png"
 #define pathBlackKing "./ressources/blackKing.png"
+#define pathWhiteQueen "./ressources/whiteQueen.png"
+#define pathBlackQueen "./ressources/blackQueen.png"
 #define pathWhiteKnight "./ressources/whiteKnight.png"
 #define pathBlackKnight "./ressources/blackKnight.png"
 #define pathWhiteRook "./ressources/whiteRook.png"
@@ -106,6 +110,8 @@ namespace vue {
 
         // Connection pour l'affichage lorsqu'un mouvement est impossible
         connect(chessBoard_.get(), &model::ChessBoard::impossibleMove, this, &ChessWindow::triedImpossibleMove);
+
+        connect(chessBoard_.get(), &model::ChessBoard::promotePawn, this, &ChessWindow::selectPawnPromotion);
     }
 
     ChessWindow::~ChessWindow()
@@ -209,6 +215,8 @@ namespace vue {
                 return pathBlackRook;
             else if (dynamic_cast<Bishop*>(piece))
                 return pathBlackBishop;
+            else if (dynamic_cast<Queen*>(piece))
+                return pathBlackQueen;
             else
                 return pathBlackPawn;
         }
@@ -222,6 +230,8 @@ namespace vue {
                 return pathWhiteRook;
             else if (dynamic_cast<Bishop*>(piece))
                 return pathWhiteBishop;
+            else if (dynamic_cast<Queen*>(piece))
+                return pathWhiteQueen;
             else
                 return pathWhitePawn;
         }
@@ -238,5 +248,28 @@ namespace vue {
         ui->plainTextEdit->setPlainText(QString::fromStdString(message));
         updateBoard(chessBoard_->piecesVect_);
         lastPressedButton_ = -1;
+    }
+    void ChessWindow::selectPawnPromotion(model::Color color)
+    {
+        QMessageBox pawnSelect;
+        pawnSelect.setFixedSize(500, 500);
+        pawnSelect.setText("Pawn Promotion");
+        pawnSelect.setInformativeText("Select a piece for pawn promotion:");
+        QPushButton* knightButton = pawnSelect.addButton(tr(""), QMessageBox::ActionRole);
+        QPushButton* bishopButton = pawnSelect.addButton(tr(""), QMessageBox::ActionRole);
+        QPushButton* rookButton = pawnSelect.addButton(tr(""), QMessageBox::ActionRole);
+        QPushButton* queenButton = pawnSelect.addButton(tr(""), QMessageBox::ActionRole);
+        knightButton->setObjectName("knight");
+        bishopButton->setObjectName("bishop");
+        rookButton->setObjectName("rook");
+        queenButton->setObjectName("queen");
+        setImageCase(knightButton, color == model::Color::white ? pathWhiteKnight : pathBlackKnight);
+        setImageCase(bishopButton, color == model::Color::white ? pathWhiteBishop : pathBlackBishop);
+        setImageCase(rookButton, color == model::Color::white ? pathWhiteRook : pathBlackRook);
+        setImageCase(queenButton, color == model::Color::white ? pathWhiteQueen : pathBlackQueen);
+
+        pawnSelect.exec();
+
+        chessBoard_->addPiecePawnPromotion(pawnSelect.clickedButton()->objectName().toStdString());
     }
 }

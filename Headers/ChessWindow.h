@@ -38,6 +38,7 @@ void setBoard();
 
 void updateBoard(std::vector<std::shared_ptr<model::Piece>> pieces);
 void triedImpossibleMove(std::string message);
+void selectPawnPromotion(model::Color color);
 
 
 signals:
