@@ -3,6 +3,7 @@
 #include "../Headers/Knight.h"
 #include "../Headers/ChessBoard.h"
 #include "../Headers/Bishop.h"
+#include "../Headers/Pawn.h"
 
 namespace model {
     using namespace::std;
@@ -53,6 +54,84 @@ namespace model {
         return false;
     }
 
+    std::pair<bool, bool> ChessBoard::castleWayIsClear(Color color)
+    {
+        bool rightIsClear, leftIsClear = true;
+        Position posKingToPlay = (color == Color::white) ? Position(5, 1) : Position(5, 8);
+        rightIsClear = getPiece({ posKingToPlay.x + 1, posKingToPlay.y }).get() || getPiece({ posKingToPlay.x + 2, posKingToPlay.y }).get();
+        leftIsClear = getPiece({ posKingToPlay.x - 1, posKingToPlay.y }).get() || getPiece({ posKingToPlay.x - 2, posKingToPlay.y }).get();
+
+        if (!(rightIsClear || leftIsClear)) {
+            return { leftIsClear, rightIsClear };
+        }
+
+        std::vector<Position> enemyAttackMoves;
+        for (auto& piece : piecesVect_) {
+            if (piece->getColor() == color)
+                continue;
+
+            std::vector<Position> currEnemyMoves;
+            auto pawnCast = dynamic_cast<Pawn*>(piece.get());
+            if (pawnCast)
+                currEnemyMoves = pawnCast->getAttackingMoves(*this);
+            else
+                currEnemyMoves = piece->getValidMoves(*this).first;
+            enemyAttackMoves.insert(enemyAttackMoves.begin(), currEnemyMoves.begin(), currEnemyMoves.end());
+        }
+
+        Position enemyMoveToCheck;
+        Position rightMovesToCheck[3] = {
+            {posKingToPlay.x + 1, posKingToPlay.y},
+            {posKingToPlay.x + 2, posKingToPlay.y},
+            {posKingToPlay.x + 3, posKingToPlay.y},
+        };
+
+        Position leftMovesToCheck[4] = {
+            {posKingToPlay.x - 1, posKingToPlay.y},
+            {posKingToPlay.x - 2, posKingToPlay.y},
+            {posKingToPlay.x - 3, posKingToPlay.y},
+            {posKingToPlay.x - 4, posKingToPlay.y}
+        };
+        do {
+            enemyMoveToCheck = enemyAttackMoves.back();
+            if (enemyMoveToCheck == posKingToPlay) {
+                return { false, false };
+            }
+            if (rightIsClear) {
+                for (const auto& move : rightMovesToCheck) {
+                    if (enemyMoveToCheck == move) {
+                        rightIsClear = false;
+                        break;
+                    }
+                }
+            }
+            if (leftIsClear) {
+                for (const auto& move : leftMovesToCheck) {
+                    if (enemyMoveToCheck == move) {
+                        leftIsClear = false;
+                        break;
+                    }
+                }
+            }
+            enemyAttackMoves.pop_back();
+        } while (rightIsClear || leftIsClear);
+
+        return { rightIsClear, leftIsClear };
+    }
+
+    std::vector<Position> ChessBoard::getMovesPiece(Position posPiece)
+    {
+        if (!posPiece.isOnBoard()) {
+            return std::vector<Position>();
+        }
+
+        Piece* piece = getPiece(posPiece).get();
+
+        if (piece) {
+            return piece->getValidMoves(*this).first;
+        }
+    }
+
     void ChessBoard::movePiece(Position posInit, Position posVoulue) {
         if (posInit.isOnBoard() && posVoulue.isOnBoard()) {
             auto copiePieces = piecesVect_;
@@ -78,7 +157,6 @@ namespace model {
 
                                 ChessBoard::shouldUpdate();
                             }
-                            return;
                         }
                     }
                     // Si on se rend ici, le mouvement voulu est impossible
@@ -91,9 +169,47 @@ namespace model {
                 }
 
             }
-
             else {
                 emit(impossibleMove("Click on a piece to move it"));
+            }
+        }
+    }
+
+    bool ChessBoard::moveIsValid(Position posInit, Position posVoulue)
+    {
+        if (posInit.isOnBoard() && posVoulue.isOnBoard()) {
+            auto copiePieces = piecesVect_;
+
+            auto& pieceADeplacer = getPiece(posInit);
+
+            // On verifie qu'il y as une piece sur la case
+            if (pieceADeplacer) {
+
+                // On verifie si la piece est de la bonne couleure
+                if (pieceADeplacer->getColor() == colorToPlay_) {
+                    for (auto positionPossible : pieceADeplacer->getValidMoves(*this).first) {
+                        if (posVoulue == positionPossible) {
+
+                            piecesVect_[posTo1D(posVoulue)] = move(getPiece(posInit));
+                            if (kingToPlayIsInCheck()) {
+                                piecesVect_ = copiePieces;
+                                return false;
+                            }
+                            piecesVect_ = copiePieces;
+                            return true;
+                        }
+                    }
+                    // Si on se rend ici, le mouvement voulu est impossible
+                    return false;
+                }
+
+                else {
+                    return false;
+                }
+
+            }
+            else {
+                return false;
             }
         }
     }

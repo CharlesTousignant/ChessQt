@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ChessBoard.h"
+#include "Piece.h"
 
 #include <vector>
 #include <set>
@@ -49,9 +50,11 @@ private:
     std::unique_ptr<model::ChessBoard> chessBoard_;
     int lastPressedButton_ = -1;
     std::vector<QPushButton*> listCases_;
-
+    void displayPossibleMoves(model::Position startPosition, const std::vector<model::Position>& moves) const;
+    void addPossibleMoveCircle(QPushButton* label) const;
+    void highlightPiece(QPushButton* label) const;
     // Gives an image to a pushButton
-    void setImageCase(QPushButton* label, std::string pathIMG);
+    void setImageCase(QPushButton* label, std::string pathIMG) const;
 };
 
 std::string generatePathFromPiece(const model::Piece* piece);

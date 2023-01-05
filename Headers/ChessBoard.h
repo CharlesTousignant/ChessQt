@@ -21,10 +21,12 @@ namespace model {
         std::vector<Piece*> getVectPieceEnJeu();
 
         std::vector<std::shared_ptr<Piece>> piecesVect_;
-
+        std::vector<Position> getMovesPiece(Position posPiece);
         void movePiece(Position posInit, Position posVoulue);
+        bool moveIsValid(Position posInit, Position posVoulue);
 
         bool isEnemyKing(Piece* piece) const;
+        std::pair<bool, bool> castleWayIsClear(Color color);
     signals:
         void boardChanged(std::vector<std::shared_ptr<Piece>> boardState);
         void impossibleMove(std::string message);

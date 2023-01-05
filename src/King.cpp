@@ -1,11 +1,12 @@
 #include "../Headers/King.h"
 #include "../Headers/ChessBoard.h"
+#include "../Headers/Rook.h"
 
 namespace model {
     using namespace::std;
 
     King::King(Position posInit, Color couleur) :
-        Piece::Piece(posInit, couleur)
+        CastlingPiece::CastlingPiece(posInit, couleur)
     {
         if (countRoi_ < maxKingInGame) {
             ++countRoi_;
@@ -53,6 +54,24 @@ namespace model {
                 }
             }
         }
+
+        if (canCastle()) {
+            std::pair<bool, bool> castleWayInfo = chessBoard.castleWayIsClear(color_);
+
+            Position rookPosition = {position_.x + 3, position_.y};
+            auto neighboringRook = dynamic_cast<Rook*>(chessBoard.getPiece(rookPosition).get());
+            if (neighboringRook && neighboringRook->canCastle() && castleWayInfo.first) {
+                validMoves.push_back({ rookPosition.x - 1, rookPosition.y });
+            }
+
+            rookPosition = { position_.x - 4, position_.y };
+            neighboringRook = dynamic_cast<Rook*>(chessBoard.getPiece(rookPosition).get());
+            if (neighboringRook && neighboringRook->canCastle() && castleWayInfo.second) {
+                validMoves.push_back({ rookPosition.x - 1, rookPosition.y });
+            }
+        }
+
         return { validMoves, isAttackingKing };
     }
+    
 }

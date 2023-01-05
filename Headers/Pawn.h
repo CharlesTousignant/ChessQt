@@ -5,7 +5,8 @@ namespace model {
     class Pawn : public Piece {
     public:
         using Piece::Piece;
-        std::pair<std::vector<Position>, bool> getValidMoves(ChessBoard& echiquier) const override;
+        std::pair<std::vector<Position>, bool> getValidMoves(ChessBoard& chessBoard) const override;
+        std::vector<Position> getAttackingMoves(ChessBoard& echiquier) const;
         virtual void setPos(Position newPos) override;
         bool hasMovedTwoLastMove() const;
     private:

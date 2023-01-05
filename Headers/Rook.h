@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Piece.h"
+#include "CastlingPiece.h"
 namespace model {
-    class Rook : public Piece {
+    class Rook : public CastlingPiece {
     public:
-        using Piece::Piece;
+        using CastlingPiece::CastlingPiece;
         std::pair<std::vector<Position>, bool> getValidMoves(ChessBoard& echiquier) const override;
     };
 }

@@ -24,20 +24,40 @@ namespace model {
         }
 
         // Attack sideways
-        posPossible = { position_.x + 1, position_.y + (color_ == white ? 1 : -1) };
-        piece = chessBoard.getPiece(posPossible).get();
-        if (piece && piece->getColor() != color_ || ) {
+        auto attackingMoves = getAttackingMoves(chessBoard);
+        validMoves.insert(validMoves.end(), attackingMoves.begin(), attackingMoves.end());
+
+        return { validMoves, isAttackingKing };
+    }
+    std::vector<Position> Pawn::getAttackingMoves(ChessBoard& chessBoard) const
+    {   
+        vector<Position> attackMoves;
+        // Attack sideways
+        Position posPossible = { position_.x + 1, position_.y + (color_ == white ? 1 : -1) };
+        auto piece = chessBoard.getPiece(posPossible).get();
+        if (piece && piece->getColor() != color_) {
             // On ajoute le mouvement au vecteur
-            validMoves.push_back(posPossible);
+            attackMoves.push_back(posPossible);
+        }
+        else {
+            auto neighboringPawn = dynamic_cast<Pawn*>(chessBoard.getPiece({ position_.x + 1 , position_.y }).get());
+            if (neighboringPawn && neighboringPawn->hasMovedTwoLastMove()) {
+                attackMoves.push_back(posPossible);
+            }
         }
         posPossible = { position_.x - 1, position_.y + (color_ == white ? 1 : -1) };
         piece = chessBoard.getPiece(posPossible).get();
         if (piece && piece->getColor() != color_) {
             // On ajoute le mouvement au vecteur
-            validMoves.push_back(posPossible);
+            attackMoves.push_back(posPossible);
         }
-
-        return { validMoves, isAttackingKing };
+        else {
+            auto neighboringPawn = dynamic_cast<Pawn*>(chessBoard.getPiece({ position_.x - 1 , position_.y }).get());
+            if (neighboringPawn && neighboringPawn->hasMovedTwoLastMove()) {
+                attackMoves.push_back(posPossible);
+            }
+        }
+        return attackMoves;
     }
     void Pawn::setPos(Position newPos)
     {

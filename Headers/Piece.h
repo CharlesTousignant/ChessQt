@@ -20,6 +20,11 @@ namespace model {
         bool operator==(Position other);
 
         bool isOnBoard() const;
+
+        inline Position right() const;
+        inline Position left() const;
+        inline Position up() const;
+        inline Position down() const;
     };
 
     unsigned posTo1D(const Position& pos);

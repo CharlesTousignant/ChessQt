@@ -51,7 +51,7 @@ namespace model {
         }
 
         for (unsigned i = 1; (position_.y - i) >= 1 && (position_.x + i) <= 8; ++i) {
-            posPossible = { (position_.x + 1), (position_.y - i) };
+            posPossible = { (position_.x + i), (position_.y - i) };
             auto piece = chessBoard.getPiece(posPossible).get();
 
 
@@ -74,7 +74,7 @@ namespace model {
         }
 
         for (unsigned i = 1; (position_.y + i) <= 8 && (position_.x - 1) <= 8; ++i) {
-            posPossible = { (position_.x - 1), (position_.y + i) };
+            posPossible = { (position_.x - i), (position_.y + i) };
             auto piece = chessBoard.getPiece(posPossible).get();
 
 

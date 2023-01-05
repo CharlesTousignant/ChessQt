@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Piece.h"
+#include "CastlingPiece.h"
 namespace model {
-    class King : public Piece {
+    class King : public CastlingPiece {
     public:
 
         King(Position posInit, Color couleur);

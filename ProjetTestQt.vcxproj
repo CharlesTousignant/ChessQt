@@ -116,6 +116,7 @@
   <ItemGroup>
     <ClCompile Include="googletest\src\gtest-all.cc" />
     <ClCompile Include="src\Bishop.cpp" />
+    <ClCompile Include="src\CastlingPiece.cpp" />
     <ClCompile Include="src\ChessBoard.cpp" />
     <ClCompile Include="src\ChessWindow.cpp" />
     <ClCompile Include="src\King.cpp" />
@@ -152,6 +153,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\Bishop.h" />
+    <ClInclude Include="Headers\CastlingPiece.h" />
     <ClInclude Include="Headers\King.h" />
     <ClInclude Include="Headers\Knight.h" />
     <ClInclude Include="Headers\Pawn.h" />

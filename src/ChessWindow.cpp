@@ -26,18 +26,42 @@ namespace vue {
 #define pathWhiteBishop "./ressources/whiteBishop.png"
 #define pathBlackBishop "./ressources/blackBishop.png"
 #define empty "./ressources/empty.png"
+#define pathPossibleMove "./ressources/possibleMoveCircle.png"
+#define pathHighlightPiece "./ressources/selectedPieceSquare.png"
 
-    void ChessWindow::setImageCase(QPushButton* label, string pathImg = empty) {
-        auto image = QPixmap(60, 60);
 
+    void ChessWindow::setImageCase(QPushButton* label, string pathImg = empty) const{
         // On doit mettre un background transparent pour rendre le bouton transparent
-        const auto& qString = QString::fromStdString("QPushButton{background: transparent;\n" 
+        const auto& qString = QString::fromStdString("QPushButton{background: transparent;\n"
                                                                  "background-image: url(" + pathImg + ");}"); 
         label->setStyleSheet(qString);
     }
 
+    void ChessWindow::addPossibleMoveCircle(QPushButton* label) const {
+        // On doit mettre un background transparent pour rendre le bouton transparent
+        std::string string = label->styleSheet().toStdString();
+        string.pop_back();
+        string.append("image: url(");
+        string.append(pathPossibleMove);
+        string.append(");}");
+        label->setStyleSheet(QString::fromStdString(string));
+    }
+
+    void ChessWindow::highlightPiece(QPushButton* label) const {
+        std::string string = label->styleSheet().toStdString();
+        string.pop_back();
+        string.append("image: url(");
+        string.append(pathHighlightPiece);
+        string.append(");}");
+        label->setStyleSheet(QString::fromStdString(string));
+    }
+
     model::Position indexToPos(const unsigned& index) {
         return { unsigned(index % 8) + 1, (index / 8) + 1 };
+    }
+
+    unsigned posToIndex(const model::Position& position) {
+        return (position.y - 1) * 8 + position.x - 1;
     }
 
     
@@ -51,8 +75,8 @@ namespace vue {
           QMainWindow(parent),
           ui(new Ui::ChessWindow)
     {   
-        
         chessBoard_ = make_unique<model::ChessBoard>();
+
         ui->setupUi(this);
         
         ui->echiquierWidget->setStyleSheet(QString::fromStdString("background-image: url(" "./ressources/chessboard.png"  "); "));
@@ -97,17 +121,34 @@ namespace vue {
             
             // Le dernier caractere du nom d'un bouton est son index, de 0 a 63
             lastPressedButton_ = newPressedButton;
+
+            auto possibleMoves = chessBoard_->getMovesPiece(indexToPos(lastPressedButton_));
+            displayPossibleMoves(indexToPos(lastPressedButton_), possibleMoves);
         }
 
         else {
-            chessBoard_->movePiece(indexToPos(lastPressedButton_), indexToPos(newPressedButton));
-
-            // On remets lastPressedButton a sa valeur de depart
+            if (lastPressedButton_ == newPressedButton) {
+                // Remove possible moves circles
+                updateBoard(chessBoard_->piecesVect_);
+            }
+            else {
+                chessBoard_->movePiece(indexToPos(lastPressedButton_), indexToPos(newPressedButton));
+            }
             lastPressedButton_ = -1;
         }
     };
 
-    // Utilisee pour choisir une position de depart avec un des trois boutons
+    void ChessWindow::displayPossibleMoves(model::Position startPosition, const std::vector<model::Position>& moves) const
+    {   
+        highlightPiece(listCases_[posToIndex(startPosition)]);
+        for (const auto& move : moves) {
+            if ((chessBoard_->moveIsValid(startPosition, move))) {
+                addPossibleMoveCircle(listCases_[posToIndex(move)]);
+            }
+        }
+    }
+
+    
     void ChessWindow::setBoard() {
         chessBoard_->reset();
 
@@ -192,5 +233,7 @@ namespace vue {
 
     void ChessWindow::triedImpossibleMove(string message) {
         ui->plainTextEdit->setPlainText(QString::fromStdString(message));
+        updateBoard(chessBoard_->piecesVect_);
+        lastPressedButton_ = -1;
     }
 }

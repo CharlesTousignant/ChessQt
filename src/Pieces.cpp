@@ -19,6 +19,26 @@ namespace model {
             return false;
     }
 
+    inline Position Position::right() const
+    {
+        return {x + 1, y};
+    }
+
+    inline Position Position::left() const
+    {
+        return { x - 1, y };
+    }
+
+    inline Position Position::up() const
+    {
+        return { x, y + 1 };
+    }
+
+    inline Position Position::down() const
+    {
+        return { x, y - 1 };
+    }
+
     unsigned posTo1D(const Position& pos) {
         return (pos.x - 1) + ((pos.y - 1) * 8);
     }
