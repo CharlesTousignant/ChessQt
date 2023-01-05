@@ -40,7 +40,7 @@ namespace model {
     }
 
     unsigned posTo1D(const Position& pos) {
-        return (pos.x - 1) + ((pos.y - 1) * 8);
+        return std::max(std::min((pos.x - 1) + ((pos.y - 1) * 8), (unsigned)63), (unsigned)0);
     }
 
     Piece::Piece(Position posInit, Color color) {

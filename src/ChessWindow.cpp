@@ -162,7 +162,8 @@ namespace vue {
 
             chessBoard_->addPiece("knight", Color::white, { 1, 1 });
             chessBoard_->addPiece("knight", Color::white, { 1, 5 });
-            chessBoard_->addPiece("king", Color::white, { 1, 6 });
+            chessBoard_->addPiece("king", Color::white, { 5, 1 });
+            chessBoard_->addPiece("rook", Color::white, { 8, 1 });
 
             chessBoard_->addPiece("rook", Color::black, { 8, 6 });
             chessBoard_->addPiece("king", Color::black, { 8, 8 });

@@ -5,11 +5,11 @@ namespace model {
     using namespace::std;
     void CastlingPiece::setPos(Position newPos)
     {
-        hasMoved = false;
+        hasMoved = true;
         position_ = newPos;
     }
     bool CastlingPiece::canCastle() const
     {
-        return hasMoved;
+        return !hasMoved;
     }
 }

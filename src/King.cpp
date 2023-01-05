@@ -5,9 +5,10 @@
 namespace model {
     using namespace::std;
 
-    King::King(Position posInit, Color couleur) :
+    King::King(Position posInit, Color couleur, bool canCastle) :
         CastlingPiece::CastlingPiece(posInit, couleur)
-    {
+    {   
+        hasMoved != canCastle;
         if (countRoi_ < maxKingInGame) {
             ++countRoi_;
         }
@@ -21,7 +22,34 @@ namespace model {
     }
 
     std::pair<vector<Position>, bool> King::getValidMoves(ChessBoard& chessBoard) const {
-        vector<Position> validMoves;
+        auto normalMovesInfo = getValidMovesNoCastle(chessBoard);
+
+        vector<Position> validMoves = normalMovesInfo.first;
+        bool isAttackingKing = normalMovesInfo.second;
+
+        
+
+        if (canCastle()) {
+            std::pair<bool, bool> castleWayInfo = chessBoard.castleWayIsClear(color_);
+
+            Position rookPosition = { position_.x + 3, position_.y };
+            auto neighboringRook = dynamic_cast<Rook*>(chessBoard.getPiece(rookPosition).get());
+            if (neighboringRook && neighboringRook->getColor() == color_ && neighboringRook->canCastle() && castleWayInfo.first) {
+                validMoves.push_back({ rookPosition.x - 1, rookPosition.y });
+            }
+
+            rookPosition = { position_.x - 4, position_.y };
+            neighboringRook = dynamic_cast<Rook*>(chessBoard.getPiece(rookPosition).get());
+            if (neighboringRook && neighboringRook->getColor() == color_ && neighboringRook->canCastle() && castleWayInfo.second) {
+                validMoves.push_back({ rookPosition.x - 1, rookPosition.y });
+            }
+        }
+        return { validMoves, isAttackingKing};
+    }
+
+    std::pair<std::vector<Position>, bool> King::getValidMovesNoCastle(ChessBoard& chessBoard) const
+    {   
+        vector<Position> validMoves ;
         bool isAttackingKing = false;
 
         Position posPossible;
@@ -54,24 +82,9 @@ namespace model {
                 }
             }
         }
-
-        if (canCastle()) {
-            std::pair<bool, bool> castleWayInfo = chessBoard.castleWayIsClear(color_);
-
-            Position rookPosition = {position_.x + 3, position_.y};
-            auto neighboringRook = dynamic_cast<Rook*>(chessBoard.getPiece(rookPosition).get());
-            if (neighboringRook && neighboringRook->canCastle() && castleWayInfo.first) {
-                validMoves.push_back({ rookPosition.x - 1, rookPosition.y });
-            }
-
-            rookPosition = { position_.x - 4, position_.y };
-            neighboringRook = dynamic_cast<Rook*>(chessBoard.getPiece(rookPosition).get());
-            if (neighboringRook && neighboringRook->canCastle() && castleWayInfo.second) {
-                validMoves.push_back({ rookPosition.x - 1, rookPosition.y });
-            }
-        }
-
         return { validMoves, isAttackingKing };
     }
+
+
     
 }

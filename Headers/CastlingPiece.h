@@ -7,7 +7,7 @@ namespace model {
         using Piece::Piece;
         virtual void setPos(Position newPos) override;
         bool canCastle() const;
-    private:
+    protected:
         bool hasMoved = false;
     };
 }

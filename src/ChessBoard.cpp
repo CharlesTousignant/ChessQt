@@ -58,8 +58,8 @@ namespace model {
     {
         bool rightIsClear, leftIsClear = true;
         Position posKingToPlay = (color == Color::white) ? Position(5, 1) : Position(5, 8);
-        rightIsClear = getPiece({ posKingToPlay.x + 1, posKingToPlay.y }).get() || getPiece({ posKingToPlay.x + 2, posKingToPlay.y }).get();
-        leftIsClear = getPiece({ posKingToPlay.x - 1, posKingToPlay.y }).get() || getPiece({ posKingToPlay.x - 2, posKingToPlay.y }).get();
+        rightIsClear = !(getPiece({ posKingToPlay.x + 1, posKingToPlay.y }).get() || getPiece({ posKingToPlay.x + 2, posKingToPlay.y }).get());
+        leftIsClear = !(getPiece({ posKingToPlay.x - 1, posKingToPlay.y }).get() || getPiece({ posKingToPlay.x - 2, posKingToPlay.y }).get());
 
         if (!(rightIsClear || leftIsClear)) {
             return { leftIsClear, rightIsClear };
@@ -67,15 +67,20 @@ namespace model {
 
         std::vector<Position> enemyAttackMoves;
         for (auto& piece : piecesVect_) {
-            if (piece->getColor() == color)
+            if (!piece || piece->getColor() == color)
                 continue;
 
             std::vector<Position> currEnemyMoves;
             auto pawnCast = dynamic_cast<Pawn*>(piece.get());
             if (pawnCast)
                 currEnemyMoves = pawnCast->getAttackingMoves(*this);
-            else
-                currEnemyMoves = piece->getValidMoves(*this).first;
+            else {
+                auto kingCast = dynamic_cast<King*>(piece.get());
+                if (kingCast)
+                    currEnemyMoves = kingCast->getValidMovesNoCastle(*this).first;
+                else
+                    currEnemyMoves = piece->getValidMoves(*this).first;
+            }
             enemyAttackMoves.insert(enemyAttackMoves.begin(), currEnemyMoves.begin(), currEnemyMoves.end());
         }
 
@@ -94,6 +99,7 @@ namespace model {
         };
         do {
             enemyMoveToCheck = enemyAttackMoves.back();
+            enemyAttackMoves.pop_back();
             if (enemyMoveToCheck == posKingToPlay) {
                 return { false, false };
             }
@@ -113,8 +119,7 @@ namespace model {
                     }
                 }
             }
-            enemyAttackMoves.pop_back();
-        } while (rightIsClear || leftIsClear);
+        } while ((rightIsClear || leftIsClear) && !enemyAttackMoves.empty());
 
         return { rightIsClear, leftIsClear };
     }
@@ -126,7 +131,6 @@ namespace model {
         }
 
         Piece* piece = getPiece(posPiece).get();
-
         if (piece) {
             return piece->getValidMoves(*this).first;
         }
@@ -136,7 +140,7 @@ namespace model {
         if (posInit.isOnBoard() && posVoulue.isOnBoard()) {
             auto copiePieces = piecesVect_;
 
-            auto& pieceADeplacer = getPiece(posInit);
+            auto pieceADeplacer = getPiece(posInit).get();
 
             // On verifie qu'il y as une piece sur la case
             if (pieceADeplacer) {
@@ -154,6 +158,19 @@ namespace model {
                             else {
                                 piecesVect_[posTo1D(posVoulue)]->setPos(posVoulue);
                                 changeColor(colorToPlay_);
+
+                                // check if the move is a castle
+                                auto king = dynamic_cast<King*>(pieceADeplacer);
+                                if (king) {
+                                    if (posVoulue.x - posInit.x == 2) {
+                                        piecesVect_[posTo1D({ posVoulue.x + 1, posVoulue.y })]->setPos({ posVoulue.x - 1, posVoulue.y });
+                                        piecesVect_[posTo1D({ posVoulue.x - 1, posVoulue.y })] = move(getPiece({ posVoulue.x + 1, posVoulue.y }));
+                                    }
+                                    else if (posVoulue.x - posInit.x == -3) {
+                                        piecesVect_[posTo1D({ posVoulue.x - 1, posVoulue.y })]->setPos({ posVoulue.x + 1, posVoulue.y });
+                                        piecesVect_[posTo1D({ posVoulue.x + 1, posVoulue.y })] = move(getPiece({ posVoulue.x - 1, posVoulue.y }));
+                                    }
+                                }
 
                                 ChessBoard::shouldUpdate();
                             }
