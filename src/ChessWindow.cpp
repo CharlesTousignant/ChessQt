@@ -160,14 +160,16 @@ namespace vue {
         switch (choiceBoard) {
         case 1:
 
-            chessBoard_->addPiece("knight", Color::white, { 1, 1 });
+            chessBoard_->addPiece("knight", Color::white, { 2, 1 });
             chessBoard_->addPiece("knight", Color::white, { 1, 5 });
             chessBoard_->addPiece("king", Color::white, { 5, 1 });
-            chessBoard_->addPiece("rook", Color::white, { 8, 1 });
+            chessBoard_->addPiece("rook", Color::white, { 1, 1 });
+            chessBoard_->addPiece("pawn", Color::white, { 1, 2 });
 
             chessBoard_->addPiece("rook", Color::black, { 8, 6 });
             chessBoard_->addPiece("king", Color::black, { 8, 8 });
             chessBoard_->addPiece("bishop", Color::black, { 8, 7 });
+            chessBoard_->addPiece("pawn", Color::black, { 2, 7 });
             break;
 
         case 2:

@@ -27,6 +27,8 @@ namespace model {
 
         bool isEnemyKing(Piece* piece) const;
         std::pair<bool, bool> castleWayIsClear(Color color);
+        void removePieceFromBoard(Position position);
+
     signals:
         void boardChanged(std::vector<std::shared_ptr<Piece>> boardState);
         void impossibleMove(std::string message);
@@ -38,6 +40,8 @@ namespace model {
         void shouldUpdate();
 
         bool kingToPlayIsInCheck();
+        bool kingToPlayIsCheckMated();
+
         Color colorToPlay_;
     };
 }

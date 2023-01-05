@@ -32,6 +32,10 @@ namespace model {
                 piecesVect_[indexPos] = make_shared<Bishop>(posPiece, color);
             }
 
+            else if (type == "pawn") {
+                piecesVect_[indexPos] = make_shared<Pawn>(posPiece, color);
+            }
+
             ChessBoard::shouldUpdate();
         }
         else
@@ -59,7 +63,7 @@ namespace model {
         bool rightIsClear, leftIsClear = true;
         Position posKingToPlay = (color == Color::white) ? Position(5, 1) : Position(5, 8);
         rightIsClear = !(getPiece({ posKingToPlay.x + 1, posKingToPlay.y }).get() || getPiece({ posKingToPlay.x + 2, posKingToPlay.y }).get());
-        leftIsClear = !(getPiece({ posKingToPlay.x - 1, posKingToPlay.y }).get() || getPiece({ posKingToPlay.x - 2, posKingToPlay.y }).get());
+        leftIsClear = !(getPiece({ posKingToPlay.x - 1, posKingToPlay.y }).get() || getPiece({ posKingToPlay.x - 2, posKingToPlay.y }).get() || getPiece({ posKingToPlay.x - 3, posKingToPlay.y }).get());
 
         if (!(rightIsClear || leftIsClear)) {
             return { leftIsClear, rightIsClear };
@@ -136,6 +140,31 @@ namespace model {
         }
     }
 
+    bool ChessBoard::kingToPlayIsCheckMated() {
+        for (auto& piece : piecesVect_) {
+            if (!piece || piece->getColor() != colorToPlay_) {
+                continue;
+            }
+            auto possibleMoves = piece->getValidMoves(*this).first;
+            if (!possibleMoves.empty()) {
+                for (const auto& move : possibleMoves) {
+                    if (moveIsValid(piece->getPos(), move)) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    void ChessBoard::removePieceFromBoard(Position position)
+    {
+        auto piece = getPiece(position);
+        if (piece) {
+            piecesVect_[posTo1D(position)] = shared_ptr<Piece>(nullptr);
+        }
+    }
+
     void ChessBoard::movePiece(Position posInit, Position posVoulue) {
         if (posInit.isOnBoard() && posVoulue.isOnBoard()) {
             auto copiePieces = piecesVect_;
@@ -171,6 +200,19 @@ namespace model {
                                         piecesVect_[posTo1D({ posVoulue.x + 1, posVoulue.y })] = move(getPiece({ posVoulue.x - 1, posVoulue.y }));
                                     }
                                 }
+                                else {
+                                    auto pawn = dynamic_cast<Pawn*>(pieceADeplacer);
+                                    if (pawn && (posInit.x - posVoulue.x) != 0) {
+                                        removePieceFromBoard({ posVoulue.x, posVoulue.y + (colorToPlay_ ? -1 : 1)});
+                                    }
+                                }
+                                if (kingToPlayIsCheckMated()) {
+                                    char checkMateMessage[30];
+                                    printf("Check Mate, %s side wins.", colorToPlay_ ? "White" : "Black");
+                                    emit(impossibleMove(checkMateMessage));
+                                }
+
+                                
 
                                 ChessBoard::shouldUpdate();
                             }
@@ -229,6 +271,7 @@ namespace model {
                 return false;
             }
         }
+        return false;
     }
 
     bool ChessBoard::isEnemyKing(Piece* piece) const

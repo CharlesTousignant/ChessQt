@@ -8,7 +8,6 @@ namespace model {
     King::King(Position posInit, Color couleur, bool canCastle) :
         CastlingPiece::CastlingPiece(posInit, couleur)
     {   
-        hasMoved != canCastle;
         if (countRoi_ < maxKingInGame) {
             ++countRoi_;
         }
@@ -41,7 +40,7 @@ namespace model {
             rookPosition = { position_.x - 4, position_.y };
             neighboringRook = dynamic_cast<Rook*>(chessBoard.getPiece(rookPosition).get());
             if (neighboringRook && neighboringRook->getColor() == color_ && neighboringRook->canCastle() && castleWayInfo.second) {
-                validMoves.push_back({ rookPosition.x - 1, rookPosition.y });
+                validMoves.push_back({ rookPosition.x + 1, rookPosition.y });
             }
         }
         return { validMoves, isAttackingKing};

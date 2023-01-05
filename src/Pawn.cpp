@@ -60,13 +60,14 @@ namespace model {
         return attackMoves;
     }
     void Pawn::setPos(Position newPos)
-    {
+    {   
         auto yChange = newPos.y - position_.y;
+        auto xChange = newPos.x - position_.x;
+        Piece::setPos(newPos);
         if (yChange == 2 || yChange == -2) {
             movedTwoLastMove = true;
-            canMoveTwo = false;
         }
-        position_ = newPos;
+        canMoveTwo = false;
     }
     bool Pawn::hasMovedTwoLastMove() const
     {
